@@ -1,0 +1,140 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Grammar Quiz</title>
+<style>
+body {
+  font-family: Arial, sans-serif;
+  background: #eef3fa;
+  text-align: center;
+  padding: 30px;
+}
+.container {
+  background: white;
+  max-width: 650px;
+  margin: auto;
+  padding: 30px;
+  border-radius: 15px;
+}
+button {
+  display: block;
+  width: 100%;
+  padding: 15px;
+  margin: 10px 0;
+  border: none;
+  border-radius: 8px;
+  background: #245b91;
+  color: white;
+  font-size: 17px;
+  cursor: pointer;
+}
+button:hover { background: #173e65; }
+#feedback { font-weight: bold; margin: 20px; }
+</style>
+</head>
+<body>
+<div class="container">
+<h1>GRAMMAR CHALLENGE</h1>
+<h2 id="question"></h2>
+<div id="answers"></div>
+<p id="feedback"></p>
+<p id="score">Score: 0</p>
+<button onclick="nextQuestion()" id="next" hidden>
+Next Question
+</button>
+</div>
+
+<script>
+const questions = [
+{
+q: "I don't like coffee. _____ do I.",
+a: ["So", "Neither", "Too", "Also"],
+correct: 1
+},
+{
+q: "I _____ study English every day.",
+a: ["also", "either", "neither", "so"],
+correct: 0
+},
+{
+q: "She is a teacher, _____.",
+a: ["either", "neither", "too", "so"],
+correct: 2
+},
+{
+q: "He can swim. _____ can I.",
+a: ["Neither", "Either", "So", "Too"],
+correct: 2
+},
+{
+q: "I don't like horror movies _____.",
+a: ["too", "also", "as well", "either"],
+correct: 3
+}
+];
+
+let current = 0;
+let score = 0;
+let answered = false;
+
+function showQuestion() {
+ answered = false;
+ document.getElementById("feedback").textContent = "";
+ document.getElementById("next").hidden = true;
+ document.getElementById("question").textContent =
+ questions[current].q;
+
+ const area = document.getElementById("answers");
+ area.innerHTML = "";
+
+ questions[current].a.forEach((answer, i) => {
+   const btn = document.createElement("button");
+   btn.textContent = answer;
+   btn.onclick = () => checkAnswer(i);
+   area.appendChild(btn);
+ });
+
+ document.getElementById("score").textContent =
+ "Score: " + score + " / " + questions.length;
+}
+
+function checkAnswer(i) {
+ if (answered) return;
+ answered = true;
+
+ const correct = questions[current].correct;
+ if (i === correct) {
+   score++;
+   document.getElementById("feedback").textContent =
+     "Correct! Excellent work!";
+ } else {
+   document.getElementById("feedback").textContent =
+     "Incorrect. Correct answer: " +
+     questions[current].a[correct];
+ }
+
+ document.getElementById("score").textContent =
+ "Score: " + score + " / " + questions.length;
+
+ document.getElementById("next").hidden = false;
+}
+
+function nextQuestion() {
+ current++;
+ if (current < questions.length) {
+   showQuestion();
+ } else {
+   document.querySelector(".container").innerHTML =
+     "<h1>QUIZ COMPLETED!</h1>" +
+     "<h2>Your score: " + score + " / " +
+     questions.length + "</h2>" +
+     "<button onclick='location.reload()'>Try Again</button>";
+ }
+}
+
+showQuestion();
+</script>
+</body>
+</html>
